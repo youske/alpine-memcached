@@ -11,17 +11,16 @@ ENV PATH=$PATH \
     APKINSTALL='bash wget memcached'
 
 RUN adduser -D -h /home/admin -s /bin/bash admin admin && \
-    addgroup -S redis && adduser -S -G redis redis && \
+    addgroup -S memcached && adduser -S -G memcached memcached && \
     apk add --no-cache ${APKINSTALL} && \
     wget -q --no-check-certificate -O /usr/local/bin/gosu ${GOSU} && \
-    chmod +x /usr/local/bin/gosu && \
-    apk add --no-cache ${APKINSTALL}
+    chmod +x /usr/local/bin/gosu
 
 COPY memcached.conf /etc/memcached.conf
 COPY entrypoint.sh /docker-entrypoint
 
 WORKDIR ${MEMCACHED_DIR}
 ENTRYPOINT ["/docker-entrypoint"]
-CMD ["bash"]
+CMD ["memcached"]
 
 EXPOSE 11211
